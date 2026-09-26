@@ -1,0 +1,26 @@
+# OSM inputs
+*.osm.pbf
+*.pbf
+
+# Valhalla generated data
+*.gph
+*.tar
+*.tar.gz
+*.tar.zst
+*.sqlite
+valhalla_tiles/
+tiles/
+
+# Local experiments/build outputs
+work/
+data/
+output/
+
+# Logs and temporary files
+*.log
+*.tmp
+.DS_Store
+.idea/
+.vscode/
+__pycache__/
+*.pyc
