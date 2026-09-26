@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://roadpilot.dev/schemas/roadpilot-seam.schema.json",
+  "title": "RoadPilot Seam Manifest",
+  "description": "Experimental portable description of a proven handoff between independently built routing regions.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "seamId",
+    "regionA",
+    "regionB",
+    "directions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "seamId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "regionA": {
+      "$ref": "#/$defs/region"
+    },
+    "regionB": {
+      "$ref": "#/$defs/region"
+    },
+    "referenceBuild": {
+      "$ref": "#/$defs/buildProof"
+    },
+    "directions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/directionProof"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "coordinate": {
+      "type": "object",
+      "required": ["lat", "lon"],
+      "properties": {
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon": { "type": "number", "minimum": -180, "maximum": 180 }
+      },
+      "additionalProperties": false
+    },
+    "region": {
+      "type": "object",
+      "required": ["id", "pbfSha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "pbfSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "buildProof": {
+      "type": "object",
+      "properties": {
+        "valhallaFingerprint": { "type": "string" },
+        "configSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "directionProof": {
+      "type": "object",
+      "required": [
+        "fromRegion",
+        "toRegion",
+        "entry",
+        "exit",
+        "travelModes",
+        "osmWayIds"
+      ],
+      "properties": {
+        "fromRegion": { "type": "string" },
+        "toRegion": { "type": "string" },
+        "entry": { "$ref": "#/$defs/coordinate" },
+        "exit": { "$ref": "#/$defs/coordinate" },
+        "travelModes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["CAR", "MOTORCYCLE", "BICYCLE", "PEDESTRIAN"]
+          }
+        },
+        "osmWayIds": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 }
+        },
+        "maximumProofGapMeters": {
+          "type": "number",
+          "minimum": 0
+        },
+        "geometry": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/coordinate" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
